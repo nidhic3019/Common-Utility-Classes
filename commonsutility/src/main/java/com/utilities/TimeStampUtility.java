@@ -7,10 +7,15 @@ package com.utilities;
 
 import org.joda.time.DateTime;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
+import java.util.GregorianCalendar;
 
 public class TimeStampUtility {
 
@@ -18,7 +23,7 @@ public class TimeStampUtility {
     private static final DateTimeFormatter SYSTEM_TIME_FORMAT = new DateTimeFormatterBuilder().appendInstant(3).toFormatter();
     private static final DateTimeFormatter UTC_TIME_WITH_SPECIALCHAR = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmssSSS'Z'").withZone(ZoneOffset.UTC);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws DatatypeConfigurationException {
         /*Instant is an offset since the origin (called an epoch)i.e Jan. 1st 1970 - 00:00 - Greenwhich mean time (GMT).
           Time measured using 86.400 seconds per day, moving forward from the origin*/
 
@@ -35,6 +40,9 @@ public class TimeStampUtility {
         createSystemTimestampInUTC_ISO(now);
 
         createUTCWithSpecialChar(now);
+
+        XMLGregorianCalendar xmlGregorianCalendar = convertTimeStampToXMLGregorianCalander(new Timestamp(System.currentTimeMillis()));
+        System.out.println(xmlGregorianCalendar);
     }
 
 
@@ -58,10 +66,16 @@ public class TimeStampUtility {
         System.out.println(systemTimeInISO);
     }
 
-    public static void createUTCWithSpecialChar(Instant instant){
+    public static void createUTCWithSpecialChar(Instant instant) {
         String format = UTC_TIME_WITH_SPECIALCHAR.format(instant);
         System.out.println(format);
     }
 
+    public static XMLGregorianCalendar convertTimeStampToXMLGregorianCalander(Timestamp sqlTimeStamp) throws DatatypeConfigurationException {
+        DatatypeFactory datatypeFactory = DatatypeFactory.newInstance();
 
+        GregorianCalendar gregorianCalendar = new GregorianCalendar();
+        gregorianCalendar.setTimeInMillis(sqlTimeStamp.getTime());
+        return datatypeFactory.newXMLGregorianCalendar(gregorianCalendar);
+    }
 }

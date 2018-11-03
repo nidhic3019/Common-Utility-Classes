@@ -1,0 +1,12 @@
+{
+   "namespace": "com.employee",
+   "type": "record",
+   "name": "Employee",
+   "fields": [
+      {"name": "name", "type": "string"},
+      {"name": "id", "type": "int"},
+      {"name": "salary", "type": "long"},
+      {"name": "age", "type": "int"},
+      {"name": "address", "type": "string"}
+   ]
+}
